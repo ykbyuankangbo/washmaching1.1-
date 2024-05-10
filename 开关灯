@@ -1,0 +1,54 @@
+/*  Multiple LED Example
+*  
+*   Operate multiple LED outputs. Use code to configure and toggle 4 external LEDs 
+*
+*   Board: NUCLEO L476RG
+*   Author: Dr James H. Chandler, University of Leeds 2021  
+*/
+
+#include "mbed.h"
+
+// Blinking rate in milliseconds
+#define BLINKING_RATE     500ms
+
+//define output pins
+DigitalOut led1(PC_0);      // Create DigitalOut Object called led1 and assign pin PC_0
+DigitalOut led2(PC_1);      // Create DigitalOut Object called led2 and assign pin PC_1
+DigitalOut led3(PB_0);      // Create DigitalOut Object called led2 and assign pin PB_0
+DigitalOut led4(PA_4);      // Create DigitalOut Object called led2 and assign pin PA_4
+//define input pins
+DigitalIn button1(PC_10);
+DigitalIn button2(PC_11);
+DigitalIn button3(PD_2);
+
+void init_leds();           // Declare led initialisation function 
+void init_buttons();
+
+int main()
+{
+init_leds();
+init_buttons();           //initalise buttons
+bool led_on = false;    // 定义一个变量表示LED状态，初始为灭
+    while (true) {
+    if (button1.read() == 0) { // 检测按钮是否被按下（低电平）
+            led_on = !led_on;       // 取反LED状态
+            led1 = led_on;          // 设置LED状态
+            wait_us(1000);          // 等待一段时间，防止抖动
+            while (button1.read() == 0); // 等待按钮释放
+        }
+}
+}
+
+// initalisation function
+void init_leds(){
+    led1.write(0);
+    led2.write(0);
+    led3.write(0);
+    led4.write(0);
+}
+
+void init_buttons(){
+    button1.mode(PullNone);  //turn off internal pull up / pull down resistors
+    button2.mode(PullNone);  //turn off internal pull up / pull down resistors
+    button3.mode(PullNone);  //turn off internal pull up / pull down resistors
+}
